@@ -20,7 +20,11 @@ module LiftFSM (
     end
 
     always @(state, in) begin
-        
+        //state...
+        // case (param)
+        //     : 
+        //     default: 
+        // endcase
         
     end
 
