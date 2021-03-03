@@ -1,0 +1,6 @@
+module LiftFSM (
+    ports
+);
+    
+    
+endmodule
