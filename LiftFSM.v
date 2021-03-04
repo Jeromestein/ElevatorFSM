@@ -23,14 +23,13 @@ module LiftFSM (
     // output-2bit
     parameter [1:0] UP = 2'b00, DOWN = 2'b01, STAY = 2'b10;
 
-    
-
     always @(posedge clk ) begin
         // sync reset 
-        if(!rst_n)
-            crt_state <= S1;
-        else
+        if (!rst_n) begin
+            crt_state <= S1;            
+        end else begin
             crt_state <= nxt_state;
+        end            
     end
 
     always @(crt_state, in) begin
@@ -119,7 +118,9 @@ module LiftFSM (
                         _3D: out = UP;
                         _4D: out = UP;
 
-                        default: out = out;
+                        // if there are no inputs to be processed,  
+                        // then the system has to produce the output STAY and remain in the same state
+                        default: out = STAY;
                     endcase
                 end
 
@@ -132,7 +133,7 @@ module LiftFSM (
                         _3D: out = UP;
                         _4D: out = UP;
 
-                        default: out = out;
+                        default: out = STAY;
                     endcase
                 end
 
@@ -145,7 +146,7 @@ module LiftFSM (
                         _3D: out = DOWN;
                         _4D: out = UP;
 
-                        default: out = out;
+                        default: out = STAY;
                     endcase
                 end
 
@@ -158,7 +159,7 @@ module LiftFSM (
                         _3D: out = DOWN;
                         _4D: out = DOWN;
 
-                        default: out = out;
+                        default: out = STAY;
                     endcase
                 end
 
