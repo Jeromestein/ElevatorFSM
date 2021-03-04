@@ -5,7 +5,7 @@ module LiftFSM_tb (
 );
     reg clk, rst_n;
     reg [2:0] in;
-    reg [1:0] out;
+    wire [1:0] out;
 
     // input-3bit
     // [2]-UP:0, DOWN:1
