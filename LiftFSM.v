@@ -33,8 +33,9 @@ module LiftFSM (
             crt_state <= nxt_state;
     end
 
-    // generate the next state
+    
     always @(crt_state, in) begin
+        // generate the next state
         // state table
         case (crt_state)
             S1: begin
@@ -145,7 +146,7 @@ module LiftFSM (
                 default: out = STAY;
             endcase 
         end
-
+    
     end
 
     
