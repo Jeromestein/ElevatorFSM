@@ -33,7 +33,6 @@ module LiftFSM (
             crt_state <= nxt_state;
     end
 
-    
     always @(crt_state, in) begin
         // generate the next state
         // state table
@@ -111,7 +110,18 @@ module LiftFSM (
             // if at the idle state,
             // then output depends on the input and crt_state.
             case (crt_state)
-                S1: out = UP;
+                S1: begin
+                    case (in)
+                        _1U: out = UP;
+                        _2U: out = UP;
+                        _3U: out = UP;
+                        _2D: out = UP;
+                        _3D: out = UP;
+                        _4D: out = UP;
+
+                        default: out = out;
+                    endcase
+                end
 
                 S2: begin
                     case (in)
@@ -139,7 +149,18 @@ module LiftFSM (
                     endcase
                 end
 
-                S4: out = DOWN;
+                S4: begin
+                    case (in)
+                        _1U: out = DOWN;
+                        _2U: out = DOWN;
+                        _3U: out = DOWN;
+                        _2D: out = DOWN;
+                        _3D: out = DOWN;
+                        _4D: out = DOWN;
+
+                        default: out = out;
+                    endcase
+                end
 
                 // if there are no inputs to be processed,  
                 // then the system has to produce the output STAY and remain in the same state
