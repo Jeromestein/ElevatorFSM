@@ -4,8 +4,8 @@ module E_FSM (
     output [1:0] dout
 );
 
-    wire LiftFSMdone_to_Bufdone;
-    wire BufqEmpty_to_LiftFSMqEmpty;
+    wire done_LiftFSM_to_Buf;
+    wire qEmpty_Buf_to_LiftFSM;
     wire [2:0] date_Buf_to_LiftFSM;
 
     /*
@@ -18,9 +18,9 @@ module E_FSM (
     );
     */
     Buf InputBuf (
-        clk, rst_n, LiftFSMdone_to_Bufdone, 
+        clk, rst_n, done_LiftFSM_to_Buf, 
         din, 
-        BufqEmpty_to_LiftFSMqEmpty, 
+        qEmpty_Buf_to_LiftFSM, 
         date_Buf_to_LiftFSM
     );
 
@@ -34,9 +34,9 @@ module E_FSM (
     );
     */
     LiftFSM FSM (
-        clk, rst_n, BufqEmpty_to_LiftFSMqEmpty,
+        clk, rst_n, qEmpty_Buf_to_LiftFSM,
         date_Buf_to_LiftFSM,
-        LiftFSMdone_to_Bufdone,
+        done_LiftFSM_to_Buf,
         dout
     );      
 
