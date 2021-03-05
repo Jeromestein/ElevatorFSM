@@ -1,6 +1,7 @@
 module LiftFSM (
-    input clk, rst_n,
+    input clk, rst_n, qEmpty,
     input wire [2:0] in,
+    output done,
     output reg [1:0] out
 );
     // current state, next state
@@ -28,8 +29,15 @@ module LiftFSM (
         if (!rst_n) begin
             crt_state <= S1;            
         end else begin
-            crt_state <= nxt_state;
-        end            
+            // qEmpty enables the LiftFSM module to stay in the same state and produce the ‘STAY’ output
+            // if qEmpty and crt_state is idle then stay in same state and produce the ‘STAY’ output
+            // [3]-idle:0, busy:1
+            if (qEmpty && crt_state[3] == 0) begin
+                crt_state <= crt_state;
+            end else begin
+                crt_state <= nxt_state;
+            end 
+        end              
     end
 
     always @(crt_state, in) begin
@@ -106,73 +114,78 @@ module LiftFSM (
             out = (crt_state[2] == 0)? UP : DOWN;
             
         end else begin
-            // if at the idle state,
-            // then output depends on the input and crt_state.
-            case (crt_state)
-                S1: begin
-                    case (in)
-                        _1U: out = UP;
-                        _2U: out = UP;
-                        _3U: out = UP;
-                        _2D: out = UP;
-                        _3D: out = UP;
-                        _4D: out = UP;
+            // qEmpty enables the LiftFSM module to stay in the same state and produce the ‘STAY’ output
+            // if qEmpty and crt_state is idle then stay in same state and produce the ‘STAY’ output
+            if (qEmpty && crt_state[3] == 0) begin
+                out = STAY;
+            end else begin
+                // if !qEmpty or not at the idle state,
+                // then output depends on the input and crt_state.
+                case (crt_state)
+                    S1: begin
+                        case (in)
+                            _1U: out = UP;
+                            _2U: out = UP;
+                            _3U: out = UP;
+                            _2D: out = UP;
+                            _3D: out = UP;
+                            _4D: out = UP;
 
-                        // if there are no inputs to be processed,  
-                        // then the system has to produce the output STAY and remain in the same state
-                        default: out = STAY;
-                    endcase
-                end
+                            // if there are no inputs to be processed,  
+                            // then the system has to produce the output STAY and remain in the same state
+                            default: out = STAY;
+                        endcase
+                    end
 
-                S2: begin
-                    case (in)
-                        _1U: out = DOWN;
-                        _2U: out = UP;
-                        _3U: out = UP;
-                        _2D: out = DOWN;
-                        _3D: out = UP;
-                        _4D: out = UP;
+                    S2: begin
+                        case (in)
+                            _1U: out = DOWN;
+                            _2U: out = UP;
+                            _3U: out = UP;
+                            _2D: out = DOWN;
+                            _3D: out = UP;
+                            _4D: out = UP;
 
-                        default: out = STAY;
-                    endcase
-                end
+                            default: out = STAY;
+                        endcase
+                    end
 
-                S3: begin
-                    case (in)
-                        _1U: out = DOWN;
-                        _2U: out = DOWN;
-                        _3U: out = UP;
-                        _2D: out = DOWN;
-                        _3D: out = DOWN;
-                        _4D: out = UP;
+                    S3: begin
+                        case (in)
+                            _1U: out = DOWN;
+                            _2U: out = DOWN;
+                            _3U: out = UP;
+                            _2D: out = DOWN;
+                            _3D: out = DOWN;
+                            _4D: out = UP;
 
-                        default: out = STAY;
-                    endcase
-                end
+                            default: out = STAY;
+                        endcase
+                    end
 
-                S4: begin
-                    case (in)
-                        _1U: out = DOWN;
-                        _2U: out = DOWN;
-                        _3U: out = DOWN;
-                        _2D: out = DOWN;
-                        _3D: out = DOWN;
-                        _4D: out = DOWN;
+                    S4: begin
+                        case (in)
+                            _1U: out = DOWN;
+                            _2U: out = DOWN;
+                            _3U: out = DOWN;
+                            _2D: out = DOWN;
+                            _3D: out = DOWN;
+                            _4D: out = DOWN;
 
-                        default: out = STAY;
-                    endcase
-                end
+                            default: out = STAY;
+                        endcase
+                    end
 
-                // if there are no inputs to be processed,  
-                // then the system has to produce the output STAY and remain in the same state
-                default: out = STAY;
-            endcase 
-        end
-    
+                    // if there are no inputs to be processed,  
+                    // then the system has to produce the output STAY and remain in the same state
+                    default: out = STAY;
+                endcase 
+            end             
+        end    
     end
 
-    
-
+    // [3]-idle:0, busy:1
+    assign done = ~crt_state[3];
 
 
 endmodule

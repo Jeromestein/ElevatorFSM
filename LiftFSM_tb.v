@@ -2,12 +2,21 @@
 
 module LiftFSM_tb ();
 
-    reg clk, rst_n;
+    reg clk, rst_n, qEmpty;
     reg [2:0] in;
+    wire done;
     wire [1:0] out;
 
     // instantiate LiftFSM
-    LiftFSM U1 (clk, rst_n, in, out);
+    /*
+    module LiftFSM (
+        input clk, rst_n, qEmpty,
+        input wire [2:0] in,
+        output done,
+        output reg [1:0] out
+    );
+    */
+    LiftFSM U1 (clk, rst_n, qEmpty, in, done, out);
 
 
     ////////////////////
@@ -101,31 +110,38 @@ module LiftFSM_tb ();
     initial begin
         clk = 0;
         rst_n = 0;
+        qEmpty = 1;
 
-        #20 
+        #20; 
         rst_n = 1;
+        qEmpty = 0;
         in = _1U;
 
-        #50
+        #50;
         in = _3U;
 
-        #100
+        #50
         in = _2D;
 
-        #150
+        #50
         in = _2U;
 
-        #200
+        #50
         in = _4D;
 
-        #250
+        #50
         in = _3D;
 
-        #300
+        #50
         in = _2D;
 
-        #350
+        #50
         in = _4D;
+
+        #50
+        qEmpty = 1;
+        #100
+        qEmpty = 0;
 
         #600  
         $display("Running testbench");
