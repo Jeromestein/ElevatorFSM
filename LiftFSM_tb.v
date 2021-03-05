@@ -3,20 +3,20 @@
 module LiftFSM_tb ();
 
     reg clk, rst_n, qEmpty;
-    reg [2:0] in;
+    reg [2:0] din;
     wire done;
-    wire [1:0] out;
+    wire [1:0] dout;
 
     // instantiate LiftFSM
     /*
     module LiftFSM (
         input clk, rst_n, qEmpty,
-        input wire [2:0] in,
+        input wire [2:0] din,
         output done,
-        output reg [1:0] out
+        output reg [1:0] dout
     );
     */
-    LiftFSM U1 (clk, rst_n, qEmpty, in, done, out);
+    LiftFSM U1 (clk, rst_n, qEmpty, din, done, dout);
 
 
     ////////////////////
@@ -83,7 +83,7 @@ module LiftFSM_tb ();
         endcase
 
         // get input name
-        case (in)
+        case (din)
             _1U: input_name = "_1U"; 
             _2U: input_name = "_2U"; 
             _3U: input_name = "_3U"; 
@@ -96,7 +96,7 @@ module LiftFSM_tb ();
         endcase
 
         // get output name
-        case (out)
+        case (dout)
             UP: output_name = "UP"; 
             DOWN: output_name = "DOWN"; 
             STAY: output_name = "STAY"; 
@@ -115,28 +115,28 @@ module LiftFSM_tb ();
         #20; 
         rst_n = 1;
         qEmpty = 0;
-        in = _1U;
+        din = _1U;
 
         #50;
-        in = _3U;
+        din = _3U;
 
         #50
-        in = _2D;
+        din = _2D;
 
         #50
-        in = _2U;
+        din = _2U;
 
         #50
-        in = _4D;
+        din = _4D;
 
         #50
-        in = _3D;
+        din = _3D;
 
         #50
-        in = _2D;
+        din = _2D;
 
         #50
-        in = _4D;
+        din = _4D;
 
         #50
         qEmpty = 1;
