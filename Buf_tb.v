@@ -13,6 +13,14 @@ module Buf_tb ();
                     _NONE = 3'b000; 
 
     // instantiate Buf
+    /*
+    module Buf (
+        input clk, rst_n, done,
+        input [2:0] din,
+        output qEmpty,
+        output [2:0] dout    
+    );
+    */
     Buf U1 (clk, rst_n, done, din, qEmpty, dout);
     
     reg [5:0] buffer;
