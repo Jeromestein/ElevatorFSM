@@ -1,9 +1,10 @@
 module LiftFSM (
     input clk, rst_n, qEmpty,
-    input wire [2:0] in,
+    input [2:0] din,
     output done,
-    output reg [1:0] out
+    output [1:0] dout
 );
+    reg [1:0] out;
     // current state, next state
     reg [3:0] crt_state;
     reg [3:0] nxt_state;
@@ -40,12 +41,12 @@ module LiftFSM (
         end              
     end
 
-    always @(crt_state, in) begin
+    always @(crt_state, din) begin
         // generate the next state
         // state table
         case (crt_state)
             S1: begin
-                case (in)
+                case (din)
                     _1U: nxt_state = S2;
                     _2U: nxt_state = S23;
                     _3U: nxt_state = S34;
@@ -58,7 +59,7 @@ module LiftFSM (
             end
 
             S2: begin
-                case (in)
+                case (din)
                     _1U: nxt_state = S12;
                     _2U: nxt_state = S3;
                     _3U: nxt_state = S34;
@@ -71,7 +72,7 @@ module LiftFSM (
             end
 
             S3: begin
-                case (in)
+                case (din)
                     _1U: nxt_state = S12;
                     _2U: nxt_state = S23;
                     _3U: nxt_state = S4;
@@ -84,7 +85,7 @@ module LiftFSM (
             end
 
             S4: begin
-                case (in)
+                case (din)
                     _1U: nxt_state = S12;
                     _2U: nxt_state = S23;
                     _3U: nxt_state = S34;
@@ -123,7 +124,7 @@ module LiftFSM (
                 // then output depends on the input and crt_state.
                 case (crt_state)
                     S1: begin
-                        case (in)
+                        case (din)
                             _1U: out = UP;
                             _2U: out = UP;
                             _3U: out = UP;
@@ -138,7 +139,7 @@ module LiftFSM (
                     end
 
                     S2: begin
-                        case (in)
+                        case (din)
                             _1U: out = DOWN;
                             _2U: out = UP;
                             _3U: out = UP;
@@ -151,7 +152,7 @@ module LiftFSM (
                     end
 
                     S3: begin
-                        case (in)
+                        case (din)
                             _1U: out = DOWN;
                             _2U: out = DOWN;
                             _3U: out = UP;
@@ -164,7 +165,7 @@ module LiftFSM (
                     end
 
                     S4: begin
-                        case (in)
+                        case (din)
                             _1U: out = DOWN;
                             _2U: out = DOWN;
                             _3U: out = DOWN;
@@ -186,6 +187,6 @@ module LiftFSM (
 
     // [3]-idle:0, busy:1
     assign done = ~crt_state[3];
-
+    assign dout = out;
 
 endmodule
