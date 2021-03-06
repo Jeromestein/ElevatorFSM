@@ -4,17 +4,11 @@ module E_FSM_tb ();
     
     reg clk, rst_n;
     reg [2:0] din;
-
+    reg [5:0] buffer;
     reg [2:0] din_FSM; 
     reg [2:0] in_FSM; 
-    reg [5:0] buffer;
-    
     wire [1:0] dout;
 
-    reg qEmpty; 
-    reg done; 
-    
-    
     /*
     instantiate
     module E_FSM (
@@ -25,11 +19,9 @@ module E_FSM_tb ();
     */
     E_FSM U1 (clk, rst_n, din, dout);
 
-
     ////////////////////
     /* get name       */
     ////////////////////
-
     /* define name variables */
     // state name, 3 bytes, 24 bits
     reg [23:0] crt_state_name, nxt_state_name;
@@ -37,6 +29,9 @@ module E_FSM_tb ();
     reg [23:0] input_name;
     // output name, 4 bytes, 32 bits
     reg [31:0] output_name;
+
+    reg qEmpty; 
+    reg done; 
 
     /* define name parameters */
     // state parameters
@@ -148,6 +143,17 @@ module E_FSM_tb ();
 
         #50
         din = _4D;
+        #15
+        din = _2D;
+        #15
+        din = _3U;
+        #15
+        din = _3D;
+        #15
+        din = _1U;
+        #15
+        din = _2U;
+        
 
         #600  
         $display("Running testbench");
