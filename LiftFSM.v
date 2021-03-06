@@ -43,7 +43,7 @@ module LiftFSM (
         // if qEmpty and crt_state is idle then stay in same state and produce the ‘STAY’ output
         // [3]-idle:0, busy:1
         if (qEmpty && nxt_state[3] == 0) begin
-            nxt_state = nxt_state;
+            nxt_state = crt_state;
         end else begin
             // if done then get din,
             // else set in as 3'b000
@@ -64,7 +64,7 @@ module LiftFSM (
                         _4D: nxt_state = S43;
 
                         // don't change, idle state
-                        default: nxt_state = S1;
+                        default: nxt_state = crt_state;
                     endcase
                 end
 
@@ -77,7 +77,7 @@ module LiftFSM (
                         _3D: nxt_state = S32;
                         _4D: nxt_state = S43;
 
-                        default: nxt_state = S2;
+                        default: nxt_state = crt_state;
                     endcase
                 end
 
@@ -90,7 +90,7 @@ module LiftFSM (
                         _3D: nxt_state = S2;
                         _4D: nxt_state = S43;
 
-                        default: nxt_state = S3;
+                        default: nxt_state = crt_state;
                     endcase
                 end
 
@@ -103,7 +103,7 @@ module LiftFSM (
                         _3D: nxt_state = S32;
                         _4D: nxt_state = S3;
 
-                        default: nxt_state = S4;
+                        default: nxt_state = crt_state;
                     endcase
                 end
                     
@@ -114,7 +114,7 @@ module LiftFSM (
                 S34: nxt_state = S4;
                 S43: nxt_state = S3;
 
-                default: nxt_state = nxt_state;
+                default: nxt_state = crt_state;
             endcase                     
         end
             
