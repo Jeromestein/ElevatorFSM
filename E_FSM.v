@@ -1,5 +1,5 @@
 module E_FSM (
-    input clk, rst_n,
+    input clk_Buf, clk_FSM, rst_n,
     input [2:0] din,
     output [1:0] dout
 );
@@ -18,7 +18,7 @@ module E_FSM (
     );
     */
     Buf InputBuf (
-        clk, rst_n, done_LiftFSM_to_Buf, 
+        clk_Buf, rst_n, done_LiftFSM_to_Buf, 
         din, 
         qEmpty_Buf_to_LiftFSM, 
         data_Buf_to_LiftFSM
@@ -34,7 +34,7 @@ module E_FSM (
     );
     */
     LiftFSM FSM (
-        clk, rst_n, qEmpty_Buf_to_LiftFSM,
+        clk_FSM, rst_n, qEmpty_Buf_to_LiftFSM,
         data_Buf_to_LiftFSM,
         done_LiftFSM_to_Buf,
         dout
