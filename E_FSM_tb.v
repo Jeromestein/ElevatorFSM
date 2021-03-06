@@ -5,7 +5,8 @@ module E_FSM_tb ();
     reg clk, rst_n;
     reg [2:0] din;
 
-    reg [2:0] date; 
+    reg [2:0] din_FSM; 
+    reg [2:0] in_FSM; 
     reg [5:0] buffer;
     
     wire [1:0] dout;
@@ -56,7 +57,8 @@ module E_FSM_tb ();
     always @(*) begin
         qEmpty = U1.qEmpty_Buf_to_LiftFSM;
         done = U1.done_LiftFSM_to_Buf;
-        date = U1.date_Buf_to_LiftFSM;
+        din_FSM = U1.data_Buf_to_LiftFSM;
+        in_FSM = U1.FSM.in;
         buffer = U1.InputBuf.buffer;
 
         // get current state name
