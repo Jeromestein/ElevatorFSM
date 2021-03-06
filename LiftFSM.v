@@ -4,7 +4,9 @@ module LiftFSM (
     output done,
     output [1:0] dout
 );
+    reg [1:0] in;
     reg [1:0] out;
+    reg isdone;
     // current state, next state
     reg [3:0] crt_state;
     reg [3:0] nxt_state;
@@ -19,8 +21,8 @@ module LiftFSM (
     // input-3bit
     // [2]-UP:0, DOWN:1
     parameter [2:0] _1U = 3'b001, _2U = 3'b010, _3U = 3'b011,
-                    _2D = 3'b110, _3D = 3'b111, _4D = 3'b100;
-                    // NO-INPUT = 3'b111,  ?
+                    _2D = 3'b110, _3D = 3'b111, _4D = 3'b100,
+                    _NONE = 3'b000; 
 
     // output-2bit
     parameter [1:0] UP = 2'b00, DOWN = 2'b01, STAY = 2'b10;
@@ -30,83 +32,95 @@ module LiftFSM (
         if (!rst_n) begin
             crt_state <= S1;            
         end else begin
-            // qEmpty enables the LiftFSM module to stay in the same state and produce the ‘STAY’ output
-            // if qEmpty and crt_state is idle then stay in same state and produce the ‘STAY’ output
-            // [3]-idle:0, busy:1
-            if (qEmpty && crt_state[3] == 0) begin
-                crt_state <= crt_state;
-            end else begin
-                crt_state <= nxt_state;
-            end 
-        end              
+            crt_state <= nxt_state;            
+        end    
+        isdone <= (crt_state == nxt_state) && ~crt_state[3];          
     end
 
-    always @(crt_state, din) begin
+    always @(crt_state, din, qEmpty) begin
         // generate the next state
-        // state table
-        case (crt_state)
-            S1: begin
-                case (din)
-                    _1U: nxt_state = S2;
-                    _2U: nxt_state = S23;
-                    _3U: nxt_state = S34;
-                    _2D: nxt_state = S21;
-                    _3D: nxt_state = S32;
-                    _4D: nxt_state = S43;
-
-                    default: nxt_state = crt_state;
-                endcase
+        // qEmpty enables the LiftFSM module to stay in the same state and produce the ‘STAY’ output
+        // if qEmpty and crt_state is idle then stay in same state and produce the ‘STAY’ output
+        // [3]-idle:0, busy:1
+        if (qEmpty && nxt_state[3] == 0) begin
+            nxt_state = nxt_state;
+        end else begin
+            // if done then get din,
+            // else set in as 3'b000
+            if (isdone) begin
+                in = din;
+            end else begin
+                in = _NONE;
             end
+            // state table
+            case (crt_state)
+                S1: begin
+                    case (in)
+                        _1U: nxt_state = S2;
+                        _2U: nxt_state = S23;
+                        _3U: nxt_state = S34;
+                        _2D: nxt_state = S21;
+                        _3D: nxt_state = S32;
+                        _4D: nxt_state = S43;
 
-            S2: begin
-                case (din)
-                    _1U: nxt_state = S12;
-                    _2U: nxt_state = S3;
-                    _3U: nxt_state = S34;
-                    _2D: nxt_state = S1;
-                    _3D: nxt_state = S32;
-                    _4D: nxt_state = S43;
+                        // don't change, idle state
+                        default: nxt_state = S1;
+                    endcase
+                end
 
-                    default: nxt_state = crt_state;
-                endcase
-            end
+                S2: begin
+                    case (in)
+                        _1U: nxt_state = S12;
+                        _2U: nxt_state = S3;
+                        _3U: nxt_state = S34;
+                        _2D: nxt_state = S1;
+                        _3D: nxt_state = S32;
+                        _4D: nxt_state = S43;
 
-            S3: begin
-                case (din)
-                    _1U: nxt_state = S12;
-                    _2U: nxt_state = S23;
-                    _3U: nxt_state = S4;
-                    _2D: nxt_state = S21;
-                    _3D: nxt_state = S2;
-                    _4D: nxt_state = S43;
+                        default: nxt_state = S2;
+                    endcase
+                end
 
-                    default: nxt_state = crt_state;
-                endcase
-            end
+                S3: begin
+                    case (in)
+                        _1U: nxt_state = S12;
+                        _2U: nxt_state = S23;
+                        _3U: nxt_state = S4;
+                        _2D: nxt_state = S21;
+                        _3D: nxt_state = S2;
+                        _4D: nxt_state = S43;
 
-            S4: begin
-                case (din)
-                    _1U: nxt_state = S12;
-                    _2U: nxt_state = S23;
-                    _3U: nxt_state = S34;
-                    _2D: nxt_state = S21;
-                    _3D: nxt_state = S32;
-                    _4D: nxt_state = S3;
+                        default: nxt_state = S3;
+                    endcase
+                end
 
-                    default: nxt_state = crt_state;
-                endcase
-            end
-                
-            S12: nxt_state = S2;
-            S21: nxt_state = S1;
-            S23: nxt_state = S3;
-            S32: nxt_state = S2;
-            S34: nxt_state = S4;
-            S43: nxt_state = S3;
+                S4: begin
+                    case (in)
+                        _1U: nxt_state = S12;
+                        _2U: nxt_state = S23;
+                        _3U: nxt_state = S34;
+                        _2D: nxt_state = S21;
+                        _3D: nxt_state = S32;
+                        _4D: nxt_state = S3;
 
+                        default: nxt_state = S4;
+                    endcase
+                end
+                    
+                S12: nxt_state = S2;
+                S21: nxt_state = S1;
+                S23: nxt_state = S3;
+                S32: nxt_state = S2;
+                S34: nxt_state = S4;
+                S43: nxt_state = S3;
 
-            default: nxt_state = crt_state;
-        endcase 
+                default: nxt_state = nxt_state;
+            endcase                     
+        end
+            
+
+        
+        
 
         // generate the output
         if (crt_state[3] == 1) begin
@@ -124,7 +138,7 @@ module LiftFSM (
                 // then output depends on the input and crt_state.
                 case (crt_state)
                     S1: begin
-                        case (din)
+                        case (in)
                             _1U: out = UP;
                             _2U: out = UP;
                             _3U: out = UP;
@@ -139,7 +153,7 @@ module LiftFSM (
                     end
 
                     S2: begin
-                        case (din)
+                        case (in)
                             _1U: out = DOWN;
                             _2U: out = UP;
                             _3U: out = UP;
@@ -152,7 +166,7 @@ module LiftFSM (
                     end
 
                     S3: begin
-                        case (din)
+                        case (in)
                             _1U: out = DOWN;
                             _2U: out = DOWN;
                             _3U: out = UP;
@@ -165,7 +179,7 @@ module LiftFSM (
                     end
 
                     S4: begin
-                        case (din)
+                        case (in)
                             _1U: out = DOWN;
                             _2U: out = DOWN;
                             _3U: out = DOWN;
@@ -186,7 +200,9 @@ module LiftFSM (
     end
 
     // [3]-idle:0, busy:1
-    assign done = ~crt_state[3];
+    // when the LiftFSM module has finished processing an input and is
+    // ready to process the next
+    assign done = isdone;
     assign dout = out;
 
 endmodule
