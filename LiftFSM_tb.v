@@ -42,8 +42,8 @@ module LiftFSM_tb ();
     // input parameters
     // [2]-UP:0, DOWN:1
     parameter [2:0] _1U = 3'b001, _2U = 3'b010, _3U = 3'b011,
-                    _2D = 3'b110, _3D = 3'b111, _4D = 3'b100;
-                    // NO-INPUT = 3'b111,  ?
+                    _2D = 3'b110, _3D = 3'b111, _4D = 3'b100,
+                    _NONE = 3'b000; 
     // output parameters
     parameter [1:0] UP = 2'b00, DOWN = 2'b01, STAY = 2'b10;
                     
@@ -82,8 +82,8 @@ module LiftFSM_tb ();
             default: nxt_state_name = "S1";
         endcase
 
-        // get input name
-        case (din)
+        // get the reg "in" in U1
+        case (U1.in)
             _1U: input_name = "_1U"; 
             _2U: input_name = "_2U"; 
             _3U: input_name = "_3U"; 
@@ -95,8 +95,8 @@ module LiftFSM_tb ();
             //default: input_name = "_1U";
         endcase
 
-        // get output name
-        case (dout)
+        // get get the reg "out" in U1
+        case (U1.out)
             UP: output_name = "UP"; 
             DOWN: output_name = "DOWN"; 
             STAY: output_name = "STAY"; 
