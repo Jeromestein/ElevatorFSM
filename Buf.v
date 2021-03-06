@@ -13,6 +13,7 @@ module Buf (
     // buf[0] : is4D
     reg [5:0] buffer;
     reg [2:0] in, out;
+    reg isEmpty;
 
     // input-3bit
     // [2]-UP:0, DOWN:1
@@ -23,45 +24,47 @@ module Buf (
     // assign one same reg type in two different always block is illegal for systhesis
     always @(posedge clk ) begin
         if (!rst_n) begin
-            buffer = 6'b000000;
+            buffer <= 6'b000000;
         end else begin
             case (din)
-                _1U: buffer[5] = 1;
-                _2U: buffer[4] = 1;
-                _3U: buffer[3] = 1;
-                _2D: buffer[2] = 1;
-                _3D: buffer[1] = 1;
-                _4D: buffer[0] = 1;
+                _1U: buffer[5] <= 1;
+                _2U: buffer[4] <= 1;
+                _3U: buffer[3] <= 1;
+                _2D: buffer[2] <= 1;
+                _3D: buffer[1] <= 1;
+                _4D: buffer[0] <= 1;
 
-                default:  buffer = buffer;
+                default:  buffer <= buffer;
             endcase 
         end
 
-        if (done == 1) begin
+        isEmpty <= (buffer == 6'b000000)? 1 : 0;
+        // done == 1 means FSM is ready to process the next input
+        if (done) begin
             casex (buffer) 
                 6'b1?????: begin
                     out = _1U;
-                    buffer[5] = 0;
+                    buffer[5] <= 0;
                 end
                 6'b01????: begin
                     out = _2U;
-                    buffer[4] = 0;
+                    buffer[4] <= 0;
                 end
                 6'b001???: begin
                     out = _3U;
-                    buffer[3] = 0;
+                    buffer[3] <= 0;
                 end
                 6'b0001??: begin
                     out = _2D;
-                    buffer[2] = 0;
+                    buffer[2] <= 0;
                 end
                 6'b00001?: begin
                     out = _3D;
-                    buffer[1] = 0;
+                    buffer[1] <= 0;
                 end
                 6'b000001: begin
                     out = _4D;
-                    buffer[0] = 0;
+                    buffer[0] <= 0;
                 end
 
                 default: out = _NONE;
@@ -72,7 +75,6 @@ module Buf (
     end
 
     assign dout = out;
-    assign qEmpty = (buffer == 6'b000000)? 1 : 0;
-
+    assign qEmpty = isEmpty;
 
 endmodule
