@@ -42,7 +42,7 @@ module LiftFSM (
         // qEmpty enables the LiftFSM module to stay in the same state and produce the ‘STAY’ output
         // if qEmpty and crt_state is idle then stay in same state and produce the ‘STAY’ output
         // [3]-idle:0, busy:1
-        if (qEmpty && nxt_state[3] == 0) begin
+        if (qEmpty && din == _NONE && nxt_state[3] == 0) begin
             nxt_state = crt_state;
         end else begin
             // only if it is done then update the din
@@ -130,7 +130,7 @@ module LiftFSM (
         end else begin
             // qEmpty enables the LiftFSM module to stay in the same state and produce the ‘STAY’ output
             // if qEmpty and crt_state is idle then stay in same state and produce the ‘STAY’ output
-            if (qEmpty && crt_state[3] == 0) begin
+            if (qEmpty && crt_state == nxt_state && crt_state[3] == 0) begin
                 out = STAY;
             end else begin
                 // if !qEmpty or not at the idle state,
