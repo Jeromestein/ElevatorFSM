@@ -199,9 +199,8 @@ module LiftFSM (
     end
 
     always @(*) begin
-        // if at busy state , then it well be done
-        // or if crt_state == nxt_state then it is done (initial)
-        isdone = crt_state[3] || (crt_state == nxt_state);      
+        // if at idle state , then it is done
+        isdone = ~crt_state[3] ;      
     end
     // [3]-idle:0, busy:1
     // when the LiftFSM module has finished processing an input and is
