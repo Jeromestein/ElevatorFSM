@@ -12,12 +12,12 @@ module E_FSM_tb ();
     /*
     instantiate
     module E_FSM (
-        input clk, rst_n,
+        input clk_Buf, clk_FSM, rst_n,
         input [2:0] din,
         output [1:0] dout
     );
     */
-    E_FSM U1 (clk, rst_n, din, dout);
+    E_FSM U1 (clk, clk, rst_n, din, dout);
 
     ////////////////////
     /* get name       */
@@ -121,26 +121,48 @@ module E_FSM_tb ();
 
         #20; 
         rst_n = 1;
+        // simulate a man pressing a button
         din = _1U;
+        #15
+        din = _NONE;
 
+        // simulate a man pressing a button
         #50;
         din = _3U;
+        #15
+        din = _NONE;
 
+        // simulate a man pressing a button
         #50
         din = _2D;
+        #15
+        din = _NONE;
 
+        // simulate a man pressing a button
         #50
         din = _2U;
+        #15
+        din = _NONE;
 
+        // simulate a man pressing a button
         #50
         din = _4D;
+        #15
+        din = _NONE;
 
+        // simulate a man pressing a button 
         #50
         din = _3D;
+        #15
+        din = _NONE;
 
+        // simulate a man pressing a button 
         #50
         din = _2D;
+        #15
+        din = _NONE;
 
+        // simulate people pressing buttons at one time
         #50
         din = _4D;
         #15
@@ -164,11 +186,10 @@ module E_FSM_tb ();
     
     // set clock period as 10ns
     parameter clk_period = 10;
+
     always begin
         #(clk_period/2) 
-        clk = ~clk;
-    end          
-
-
+            clk = ~clk;
+    end      
 
 endmodule
