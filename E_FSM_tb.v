@@ -5,9 +5,15 @@ module E_FSM_tb ();
     reg clk, rst_n;
     reg [2:0] din;
 
-
+    reg [2:0] date; 
+    reg [5:0] buffer;
+    
     wire [1:0] dout;
 
+    reg qEmpty; 
+    reg done; 
+    
+    
     /*
     instantiate
     module E_FSM (
@@ -48,6 +54,11 @@ module E_FSM_tb ();
     parameter [1:0] UP = 2'b00, DOWN = 2'b01, STAY = 2'b10;
                     
     always @(*) begin
+        qEmpty = U1.qEmpty_Buf_to_LiftFSM;
+        done = U1.done_LiftFSM_to_Buf;
+        date = U1.date_Buf_to_LiftFSM;
+        buffer = U1.InputBuf.buffer;
+
         // get current state name
         case (U1.FSM.crt_state)
             S1: crt_state_name = "S1"; 
@@ -109,6 +120,7 @@ module E_FSM_tb ();
     initial begin
         clk = 0;
         rst_n = 0;
+        
 
         #20; 
         rst_n = 1;
