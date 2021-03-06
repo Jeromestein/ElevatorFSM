@@ -6,7 +6,7 @@ module E_FSM (
 
     wire done_LiftFSM_to_Buf;
     wire qEmpty_Buf_to_LiftFSM;
-    wire [2:0] date_Buf_to_LiftFSM;
+    wire [2:0] data_Buf_to_LiftFSM;
 
     /*
     instantiate Buf
@@ -21,7 +21,7 @@ module E_FSM (
         clk, rst_n, done_LiftFSM_to_Buf, 
         din, 
         qEmpty_Buf_to_LiftFSM, 
-        date_Buf_to_LiftFSM
+        data_Buf_to_LiftFSM
     );
 
     /*
@@ -35,7 +35,7 @@ module E_FSM (
     */
     LiftFSM FSM (
         clk, rst_n, qEmpty_Buf_to_LiftFSM,
-        date_Buf_to_LiftFSM,
+        data_Buf_to_LiftFSM,
         done_LiftFSM_to_Buf,
         dout
     );      
