@@ -38,7 +38,7 @@ module Buf (
             endcase 
         end
 
-        isEmpty <= (buffer == 6'b000000)? 1 : 0;
+        
         // done == 1 means FSM is ready to process the next input
         if (done) begin
             casex (buffer) 
@@ -73,7 +73,11 @@ module Buf (
             out = _NONE;
         end   
     end
-
+    
+    always @(*) begin
+        isEmpty = (buffer == 6'b000000)? 1 : 0;
+    end
+     
     assign dout = out;
     assign qEmpty = isEmpty;
 

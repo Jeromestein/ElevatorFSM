@@ -34,7 +34,7 @@ module LiftFSM (
         end else begin
             crt_state <= nxt_state;            
         end    
-        isdone <= (crt_state == nxt_state) && ~crt_state[3];          
+            
     end
 
     always @(crt_state, din, qEmpty) begin
@@ -45,12 +45,11 @@ module LiftFSM (
         if (qEmpty && nxt_state[3] == 0) begin
             nxt_state = crt_state;
         end else begin
-            // if done then get din,
-            // else set in as 3'b000
+            // only if it is done then update the din
             if (isdone) begin
                 in = din;
             end else begin
-                in = _NONE;
+                //in = _NONE;
             end
             // state table
             case (crt_state)
@@ -199,6 +198,9 @@ module LiftFSM (
         end    
     end
 
+    always @(*) begin
+        isdone = (crt_state == nxt_state) && ~crt_state[3];      
+    end
     // [3]-idle:0, busy:1
     // when the LiftFSM module has finished processing an input and is
     // ready to process the next
