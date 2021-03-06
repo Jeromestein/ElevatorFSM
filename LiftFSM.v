@@ -4,7 +4,7 @@ module LiftFSM (
     output done,
     output [1:0] dout
 );
-    reg [1:0] in;
+    reg [2:0] in;
     reg [1:0] out;
     reg isdone;
     // current state, next state
