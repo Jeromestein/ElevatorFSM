@@ -44,8 +44,8 @@ module E_FSM_tb ();
     // input parameters
     // [2]-UP:0, DOWN:1
     parameter [2:0] _1U = 3'b001, _2U = 3'b010, _3U = 3'b011,
-                    _2D = 3'b110, _3D = 3'b111, _4D = 3'b100;
-                    // NO-INPUT = 3'b111,  ?
+                    _2D = 3'b110, _3D = 3'b111, _4D = 3'b100,
+                    _NONE = 3'b000; 
     // output parameters
     parameter [1:0] UP = 2'b00, DOWN = 2'b01, STAY = 2'b10;
                     
@@ -153,6 +153,8 @@ module E_FSM_tb ();
         din = _1U;
         #15
         din = _2U;
+        #15
+        din = _NONE;
         
 
         #600  
