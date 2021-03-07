@@ -1,4 +1,4 @@
-`timescale 1ns/100ps
+`timescale 1ns/1ns
 
 module E_FSM_tb ();
     
@@ -123,43 +123,43 @@ module E_FSM_tb ();
         rst_n = 1;
         // simulate a man pressing a button
         din = _1U;
-        #15
+        #18
         din = _NONE;
 
         // simulate a man pressing a button
         #50;
         din = _3U;
-        #15
+        #18
         din = _NONE;
 
         // simulate a man pressing a button
         #50
         din = _2D;
-        #15
+        #18
         din = _NONE;
 
         // simulate a man pressing a button
         #50
         din = _2U;
-        #15
+        #18
         din = _NONE;
 
         // simulate a man pressing a button
         #50
         din = _4D;
-        #15
+        #18
         din = _NONE;
 
         // simulate a man pressing a button 
         #50
         din = _3D;
-        #15
+        #18
         din = _NONE;
 
         // simulate a man pressing a button 
         #50
         din = _2D;
-        #15
+        #18
         din = _NONE;
 
         // simulate people pressing buttons at one time
