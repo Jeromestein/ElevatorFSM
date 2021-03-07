@@ -6,7 +6,7 @@ module LiftFSM (
 );
     reg [2:0] in;
     reg [1:0] out;
-    reg isdone;
+
     // current state, next state
     reg [3:0] crt_state;
     reg [3:0] nxt_state;
@@ -192,14 +192,10 @@ module LiftFSM (
         end    
     end
 
-    always @(*) begin
-        // if nxt_state at idle state , then it is done
-        isdone = ~nxt_state[3];      
-    end
     // [3]-idle:0, busy:1
     // when the LiftFSM module has finished processing an input and is
     // ready to process the next
-    assign done = isdone;
+    assign done = ~nxt_state[3];
     assign dout = out;
 
 endmodule
