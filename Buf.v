@@ -13,7 +13,6 @@ module Buf (
     // buf[0] : is4D
     reg [5:0] buffer;
     reg [2:0] in, out;
-    reg isEmpty;
 
     // input-3bit
     // [2]-UP:0, DOWN:1
@@ -73,12 +72,8 @@ module Buf (
             out = _NONE;
         end   
     end
-    
-    always @(*) begin
-        isEmpty = (buffer == 6'b000000)? 1 : 0;
-    end
      
     assign dout = out;
-    assign qEmpty = isEmpty;
+    assign qEmpty = (buffer == 6'b000000)? 1 : 0;
 
 endmodule
