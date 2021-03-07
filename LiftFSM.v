@@ -33,16 +33,15 @@ module LiftFSM (
             crt_state <= S1;            
         end else begin
             crt_state <= nxt_state;            
-        end    
-            
+        end              
     end
 
-    always @(crt_state, din, qEmpty) begin
+    always @(clk, crt_state, din, qEmpty) begin
         // generate the next state
         // qEmpty enables the LiftFSM module to stay in the same state and produce the ‘STAY’ output
-        // if qEmpty and crt_state is idle then stay in same state and produce the ‘STAY’ output
+        // if qEmpty and nxt_state is idle then stay in same state and produce the ‘STAY’ output
         // [3]-idle:0, busy:1
-        if (qEmpty && din == _NONE && nxt_state[3] == 0) begin
+        if (qEmpty && in == _NONE && nxt_state[3] == 0) begin
             nxt_state = crt_state;
         end else begin
             // only if it is done then update the din
@@ -115,12 +114,8 @@ module LiftFSM (
 
                 default: nxt_state = crt_state;
             endcase                     
-        end
-            
-
+        end            
         
-        
-
         // generate the output
         if (crt_state[3] == 1) begin
             // if at the busy state,
@@ -200,7 +195,7 @@ module LiftFSM (
 
     always @(*) begin
         // if at idle state , then it is done
-        isdone = ~crt_state[3] ;      
+        isdone = ~crt_state[3];      
     end
     // [3]-idle:0, busy:1
     // when the LiftFSM module has finished processing an input and is
